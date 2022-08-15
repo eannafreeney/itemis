@@ -1,28 +1,10 @@
 import {
   parseInput,
   calculateTotalRoundedSalesTax,
-  calculateFullItemPrice,
+  calculateFullProductPrice,
   printOutputString,
   printTotals,
 } from "./utils.js";
-
-// parse -> products
-// const products = [
-//   {
-//     productName: "imported box of chocolates",
-//     price: 10,
-//     qty: 1,
-//     isExempt: true,
-//     isImported: true,
-//   },
-//   {
-//     productName: "imported bottle of perfume",
-//     price: 47.5,
-//     qty: 1,
-//     isExempt: false,
-//     isImported: true,
-//   },
-// ];
 
 const input1 = [
   "1 book at 12.49",
@@ -41,12 +23,14 @@ const input3 = [
 ];
 const products = input3.map(parseInput);
 
+// declare variables for printing later
 let totalSalesTax = 0;
 let billTotal = 0;
 
+// loop through the products array
 products.forEach((product) => {
   const roundedTotalSalesTax = calculateTotalRoundedSalesTax(product);
-  const fullProductPrice = calculateFullItemPrice(
+  const fullProductPrice = calculateFullProductPrice(
     product,
     roundedTotalSalesTax
   );

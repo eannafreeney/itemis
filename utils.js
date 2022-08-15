@@ -1,4 +1,39 @@
-const calculateBasicSalesTax = (product) => {
+// parsing input
+
+export const getQuantity = (arr) => {
+  return Number(arr[0]) !== NaN ? Number(arr[0]) : 0;
+};
+
+export const getPrice = (arr) => {
+  return Number(arr.at(-1));
+};
+
+export const getIsImported = (arr) => {
+  return arr.includes("imported");
+};
+
+export const getIsExempt = (arr) => {
+  const exemptProducts = ["chocolate", "pills", "book"];
+  return exemptProducts.some((el) => arr.join(" ").includes(el));
+};
+
+export const getProductName = (arr) => {
+  return arr.slice(1, -2).join(" ");
+};
+
+export const parseInput = (input) => {
+  const product = {};
+  const splitInput = input.split(" ");
+  product.qty = getQuantity(splitInput);
+  product.price = getPrice(splitInput);
+  product.isImported = getIsImported(splitInput);
+  product.isExempt = getIsExempt(splitInput);
+  product.name = getProductName(splitInput);
+  return product;
+};
+
+// calculation tasks
+export const calculateBasicSalesTax = (product) => {
   if (!product.isExempt) {
     return (product.price / 100) * 10;
   }
@@ -6,7 +41,7 @@ const calculateBasicSalesTax = (product) => {
   return 0;
 };
 
-const calculateImportSalesTax = (product) => {
+export const calculateImportSalesTax = (product) => {
   if (product.isImported) {
     return (product.price / 100) * 5;
   }
@@ -14,18 +49,18 @@ const calculateImportSalesTax = (product) => {
   return 0;
 };
 
-const calculateRoundedTotalSalesTax = (totalSalesTax) => {
+export const calculateTotalRounded = (totalSalesTax) => {
   return Math.ceil(totalSalesTax * 20) / 20;
 };
 
-export const calculateTotalRoundedSalesTax = (product) => {
+export const calculateSalesTaxTotal = (product) => {
   const totalSalesTax =
     calculateBasicSalesTax(product) + calculateImportSalesTax(product);
-  const totalRoundedSalesTax = calculateRoundedTotalSalesTax(totalSalesTax);
+  const totalRoundedSalesTax = calculateTotalRounded(totalSalesTax);
   return totalRoundedSalesTax;
 };
 
-export const calculateFullItemPrice = (product, roundedTotalSalesTax) => {
+export const calculateFullProductPrice = (product, roundedTotalSalesTax) => {
   return (product.price + roundedTotalSalesTax) * product.qty;
 };
 
@@ -36,38 +71,4 @@ export const printOutputString = (product, fullProductPrice) => {
 export const printTotals = (totalSalesTax, billTotal) => {
   console.log(`Sales Tax: ${totalSalesTax.toFixed(2)}`);
   console.log(`Total: ${billTotal.toFixed(2)}`);
-};
-
-// parsing input
-
-const getQuantity = (arr) => {
-  return Number(arr[0]);
-};
-
-const getPrice = (arr) => {
-  return Number(arr.at(-1));
-};
-
-const getIsImported = (arr) => {
-  return arr.includes("imported");
-};
-
-const getIsExempt = (arr) => {
-  const exemptProducts = ["chocolate", "pills", "book"];
-  return exemptProducts.some((el) => arr.join(" ").includes(el));
-};
-
-const getProductName = (arr) => {
-  return arr.slice(1, -2).join(" ");
-};
-
-export const parseInput = (input) => {
-  const product = {};
-  const arr = input.split(" ");
-  product.qty = getQuantity(arr);
-  product.price = getPrice(arr);
-  product.isImported = getIsImported(arr);
-  product.isExempt = getIsExempt(arr);
-  product.name = getProductName(arr);
-  return product;
 };
