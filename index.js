@@ -1,66 +1,50 @@
-export const calculateBasicSalesTax = (isExempt, price) => {
-  if (!isExempt) {
-    return (price / 100) * 10;
-  }
+import {
+  calculateTotalRoundedSalesTax,
+  calculateFullItemPrice,
+  printOutputString,
+  printTotals,
+} from "./utils.js";
 
-  return 0;
-};
+// parse -> products
+const products = [
+  {
+    productName: "book",
+    price: 12.49,
+    qty: 1,
+    isExempt: true,
+    isImported: false,
+  },
+  {
+    productName: "music CD",
+    price: 14.99,
+    qty: 1,
+    isExempt: false,
+    isImported: false,
+  },
+  {
+    productName: "chocolate bar",
+    price: 0.85,
+    qty: 1,
+    isExempt: true,
+    isImported: false,
+  },
+];
 
-export const calculateImportSalesTax = (isImported, price) => {
-  if (isImported) {
-    return (price / 100) * 5;
-  }
+let totalSalesTax = 0;
+let billTotal = 0;
 
-  return 0;
-};
+products.forEach((product) => {
+  const roundedTotalSalesTax = calculateTotalRoundedSalesTax(product);
 
-export const calculateTotalSalesTax = (basicSalesTax, importSalesTax) => {
-  return basicSalesTax + importSalesTax;
-};
+  const fullProductPrice = calculateFullItemPrice(
+    product,
+    roundedTotalSalesTax
+  );
+  printOutputString(product, fullProductPrice);
 
-// function calculateTotalSalesTax (product) {
-// const total = calculateBasicSalesTax(product) + calculateImportSalesTax(product)
-// const roundedTotalSales = total round to nearest
-// return roundedTotalSales }
+  totalSalesTax += roundedTotalSalesTax;
+  billTotal += fullProductPrice;
+});
 
-export const calculateRoundedTotalSalesTax = (totalSalesTax) => {
-  return Math.ceil(totalSalesTax * 20) / 20;
-};
-
-export const calculateFullItemPrice = (roundedTotalSalesTax, price, qty) => {
-  return (price + roundedTotalSalesTax) * qty;
-};
-
-export const prepareOutputString = (qty, productName, fullItemPrice) => {
-  return `${qty} ${productName}: ${fullItemPrice.toFixed(2)}`;
-};
-
-// [12.49, 3.50, 6.75]
-export const calculateCartTotal = (array) => {
-  return array.reduce((a, b) => a + b, 0);
-};
-
-export const printOutput = (array, roundedTotalSalesTax, cartTotal) => {
-  // for (let i = 0; i < array.length; i++) {
-  //   console.log[i];
-  // }
-  array.forEach((el) => {
-    console.log(el);
-  });
-  console.log(`Total Sales Tax: ${roundedTotalSalesTax}`);
-  console.log(`Total: ${cartTotal}`);
-};
-
-// input:  1 book at 12.49 -> ["1", "book", "12.49"]
-// input:  1 packet of headache pills at 9.75 -> ["1", "packet of headache pills", "9.75"]
-export const convertInputStringIntoArray = (input) => {
-  return input.split(" ");
-};
-
-export const getQuantity = (inputArray) => {
-  return parseInt(inputArray[0]);
-};
-
-export const getPrice = (inputArray) => {
-  return parseFloat(inputArray.at(-1));
-};
+// prints
+printTotals(totalSalesTax, billTotal);

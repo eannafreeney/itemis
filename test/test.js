@@ -12,7 +12,7 @@ import {
   calculateCartTotal,
   prepareOutputString,
   printOutput,
-} from "../index.js";
+} from "../utils.js";
 
 describe("index.js", function () {
   describe("convertInputStringIntoArray()", function () {
