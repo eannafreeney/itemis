@@ -30,26 +30,45 @@ export const calculateFullItemPrice = (product, roundedTotalSalesTax) => {
 };
 
 export const printOutputString = (product, fullProductPrice) => {
-  console.log(
-    `${product.qty} ${product.productName}: ${fullProductPrice.toFixed(2)}`
-  );
+  console.log(`${product.qty} ${product.name}: ${fullProductPrice.toFixed(2)}`);
 };
 
 export const printTotals = (totalSalesTax, billTotal) => {
-  console.log(`Sales Tax: ${totalSalesTax}`);
+  console.log(`Sales Tax: ${totalSalesTaxtoFixed(2)}`);
   console.log(`Total: ${billTotal.toFixed(2)}`);
 };
 
-// input:  1 book at 12.49 -> ["1", "book", "12.49"]
-// input:  1 packet of headache pills at 9.75 -> ["1", "packet of headache pills", "9.75"]
-export const convertInputStringIntoArray = (input) => {
-  return input.split(" ");
+// parsing input
+
+const getQuantity = (arr) => {
+  return Number(arr[0]);
 };
 
-export const getQuantity = (inputArray) => {
-  return parseInt(inputArray[0]);
+const getPrice = (arr) => {
+  return Number(arr.at(-1));
 };
 
-export const getPrice = (inputArray) => {
-  return parseFloat(inputArray.at(-1));
+const getIsImported = (arr) => {
+  return arr.includes("imported") ? true : false;
+};
+
+const getIsExempt = (arr) => {
+  // return arr.join(" ").includes("chocolate" || "pills" || "book")
+  //   ? true
+  //   : false;
+};
+
+const getProductName = (arr) => {
+  return arr.slice(1, -2).join(" ");
+};
+
+export const parseInput = (input) => {
+  const product = {};
+  const arr = input.split(" ");
+  product.qty = getQuantity(arr);
+  product.price = getPrice(arr);
+  product.isImported = getIsImported(arr);
+  product.isExempt = getIsExempt(arr);
+  product.name = getProductName(arr);
+  return product;
 };
