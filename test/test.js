@@ -127,10 +127,24 @@ describe("index.js", function () {
   });
 
   describe("prepareOutputString()", function () {
-    it("should make a template string with qty, name + fullPrice", function () {
+    it("should make a template string with qty, name + fullPrice: for champagne", function () {
       assert.equal(
         prepareOutputString(15, "bottles of Champagne", 43.99),
         "15 bottles of Champagne: 43.99"
+      );
+    });
+
+    it("should make a template string with qty, name + fullPrice", function () {
+      assert.equal(
+        prepareOutputString(1, "imported box of chocolates", 10.2),
+        "1 imported box of chocolates: 10.20"
+      );
+    });
+
+    it("should not round first 2 digits after decimal point", function () {
+      assert.equal(
+        prepareOutputString(1, "imported box of chocolates", 10.23),
+        "1 imported box of chocolates: 10.23"
       );
     });
   });

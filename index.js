@@ -31,8 +31,8 @@ export const calculateFullItemPrice = (roundedTotalSalesTax, price, qty) => {
   return (price + roundedTotalSalesTax) * qty;
 };
 
-export const prepareOutputString = (qty, product, fullItemPrice) => {
-  return `${qty} ${product}: ${fullItemPrice}`;
+export const prepareOutputString = (qty, productName, fullItemPrice) => {
+  return `${qty} ${productName}: ${fullItemPrice.toFixed(2)}`;
 };
 
 // [12.49, 3.50, 6.75]
