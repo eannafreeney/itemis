@@ -18,6 +18,11 @@ export const calculateTotalSalesTax = (basicSalesTax, importSalesTax) => {
   return basicSalesTax + importSalesTax;
 };
 
+// function calculateTotalSalesTax (product) {
+// const total = calculateBasicSalesTax(product) + calculateImportSalesTax(product)
+// const roundedTotalSales = total round to nearest
+// return roundedTotalSales }
+
 export const calculateRoundedTotalSalesTax = (totalSalesTax) => {
   return Math.ceil(totalSalesTax * 20) / 20;
 };

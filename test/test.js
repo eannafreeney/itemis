@@ -88,12 +88,19 @@ describe("index.js", function () {
     it("should return 20 if importSalesTax = 0", function () {
       assert.equal(calculateTotalSalesTax(20, 0), 20);
     });
+
+    it("should return not rounded tax for product", function () {
+      assert.ok(calculateBasicSalesTax(54.655, 47.49) - 102.145 < 0.0001);
+    });
   });
 
   describe("calculateRoundedTotalSalesTax()", function () {
-    it("should round sales tax to nearest 0.05 ie 2.51 -> 2.55", function () {
-      assert.equal(calculateRoundedTotalSalesTax(24.71), 24.75);
+    it("should round sales tax to nearest 0.05 ie 2.56 -> 2.6", function () {
       assert.equal(calculateRoundedTotalSalesTax(2.56), 2.6);
+    });
+
+    it("should round sales tax to nearest 0.05 ie 24.71 -> 24.75", function () {
+      assert.equal(calculateRoundedTotalSalesTax(24.71), 24.75);
     });
   });
 
