@@ -34,7 +34,7 @@ export const printOutputString = (product, fullProductPrice) => {
 };
 
 export const printTotals = (totalSalesTax, billTotal) => {
-  console.log(`Sales Tax: ${totalSalesTaxtoFixed(2)}`);
+  console.log(`Sales Tax: ${totalSalesTax.toFixed(2)}`);
   console.log(`Total: ${billTotal.toFixed(2)}`);
 };
 
@@ -49,13 +49,12 @@ const getPrice = (arr) => {
 };
 
 const getIsImported = (arr) => {
-  return arr.includes("imported") ? true : false;
+  return arr.includes("imported");
 };
 
 const getIsExempt = (arr) => {
-  // return arr.join(" ").includes("chocolate" || "pills" || "book")
-  //   ? true
-  //   : false;
+  const exemptProducts = ["chocolate", "pills", "book"];
+  return exemptProducts.some((el) => arr.join(" ").includes(el));
 };
 
 const getProductName = (arr) => {
