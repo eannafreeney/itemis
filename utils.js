@@ -1,11 +1,13 @@
 // parsing input
 
 export const getQuantity = (arr) => {
-  return Number(arr[0]) !== NaN ? Number(arr[0]) : 0;
+  const qty = Number(arr[0]);
+  return Number.isNaN(qty) ? 0 : qty;
 };
 
 export const getPrice = (arr) => {
-  return Number(arr.at(-1));
+  const price = Number(arr[arr.length - 1]);
+  return Number.isNaN(price) ? 0 : price;
 };
 
 export const getIsImported = (arr) => {
@@ -49,14 +51,14 @@ export const calculateImportSalesTax = (product) => {
   return 0;
 };
 
-export const calculateTotalRounded = (totalSalesTax) => {
+export const roundSalesTax = (totalSalesTax) => {
   return Math.ceil(totalSalesTax * 20) / 20;
 };
 
 export const calculateSalesTaxTotal = (product) => {
   const totalSalesTax =
     calculateBasicSalesTax(product) + calculateImportSalesTax(product);
-  const totalRoundedSalesTax = calculateTotalRounded(totalSalesTax);
+  const totalRoundedSalesTax = roundSalesTax(totalSalesTax);
   return totalRoundedSalesTax;
 };
 
@@ -65,10 +67,10 @@ export const calculateFullProductPrice = (product, roundedTotalSalesTax) => {
 };
 
 export const printOutputString = (product, fullProductPrice) => {
-  console.log(`${product.qty} ${product.name}: ${fullProductPrice.toFixed(2)}`);
+  return `${product.qty} ${product.name}: ${fullProductPrice.toFixed(2)}`;
 };
 
 export const printTotals = (totalSalesTax, billTotal) => {
-  console.log(`Sales Tax: ${totalSalesTax.toFixed(2)}`);
+  console.log(`Sales Taxes: ${totalSalesTax.toFixed(2)}`);
   console.log(`Total: ${billTotal.toFixed(2)}`);
 };

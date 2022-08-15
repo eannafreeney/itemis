@@ -1,6 +1,6 @@
 import {
   parseInput,
-  calculateTotalRoundedSalesTax,
+  calculateSalesTaxTotal,
   calculateFullProductPrice,
   printOutputString,
   printTotals,
@@ -21,23 +21,31 @@ const input3 = [
   "1 packet of headache pills at 9.75",
   "1 box of imported chocolates at 11.25",
 ];
-const products = input3.map(parseInput);
 
-// declare variables for printing later
-let totalSalesTax = 0;
-let billTotal = 0;
+function printReceipt(input) {
+  const products = input.map(parseInput);
 
-// loop through the products array
-products.forEach((product) => {
-  const roundedTotalSalesTax = calculateTotalRoundedSalesTax(product);
-  const fullProductPrice = calculateFullProductPrice(
-    product,
-    roundedTotalSalesTax
-  );
-  printOutputString(product, fullProductPrice);
-  totalSalesTax += roundedTotalSalesTax;
-  billTotal += fullProductPrice;
-});
+  // declare variables for printing later
+  let totalSalesTax = 0;
+  let billTotal = 0;
 
-// prints
-printTotals(totalSalesTax, billTotal);
+  // loop through the products array
+  products.forEach((product) => {
+    const roundedTotalSalesTax = calculateSalesTaxTotal(product);
+    const fullProductPrice = calculateFullProductPrice(
+      product,
+      roundedTotalSalesTax
+    );
+    console.log(printOutputString(product, fullProductPrice));
+    totalSalesTax += roundedTotalSalesTax;
+    billTotal += fullProductPrice;
+  });
+
+  // prints
+  printTotals(totalSalesTax, billTotal);
+  console.log("\n");
+}
+
+printReceipt(input1);
+printReceipt(input2);
+printReceipt(input3);

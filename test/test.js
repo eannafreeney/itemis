@@ -9,7 +9,7 @@ import {
   parseInput,
   calculateBasicSalesTax,
   calculateImportSalesTax,
-  calculateTotalRounded,
+  roundSalesTax,
   calculateSalesTaxTotal,
   calculateFullProductPrice,
   printOutputString,
@@ -25,9 +25,9 @@ describe("index.js", function () {
       assert.equal(getQuantity(["15", "books", "42.49"]), 15);
     });
 
-    // it("should return 0 if first element is NaN", function () {
-    //   assert.equal(getQuantity(["toy", "book", "12.49"]), 0);
-    // });
+    it("should return 0 if first element is NaN", function () {
+      assert.equal(getQuantity(["toy", "book", "12.49"]), 0);
+    });
   });
 
   describe("getPrice()", function () {
@@ -79,15 +79,15 @@ describe("index.js", function () {
   });
 
   describe("parseInput()", function () {
-    // it("should remove first and last 2 elements from the array and then return them as a string", function () {
-    //   assert.equal(parseInput("1 book of fairytales at 12.49"), {
-    //     qty: 1,
-    //     price: 12.49,
-    //     isImported: false,
-    //     isExempt: true,
-    //     name: "book of fairytales",
-    //   });
-    // });
+    it("should remove first and last 2 elements from the array and then return them as a string", function () {
+      assert.deepEqual(parseInput("1 book of fairytales at 12.49"), {
+        qty: 1,
+        price: 12.49,
+        isImported: false,
+        isExempt: true,
+        name: "book of fairytales",
+      });
+    });
   });
 
   // calculations
@@ -135,13 +135,17 @@ describe("index.js", function () {
     });
   });
 
-  describe("calculateTotalRounded()", function () {
+  describe("roundSalesTax()", function () {
     it("should round sales tax to nearest 0.05 ie 2.56 -> 2.6", function () {
-      assert.equal(calculateTotalRounded(2.56), 2.6);
+      assert.equal(roundSalesTax(2.56), 2.6);
+    });
+
+    it("should round sales tax to nearest 0.05 ie 2.96 -> 3", function () {
+      assert.equal(roundSalesTax(2.96), 3);
     });
 
     it("should round sales tax to nearest 0.05 ie 24.71 -> 24.75", function () {
-      assert.equal(calculateTotalRounded(24.71), 24.75);
+      assert.equal(roundSalesTax(24.71), 24.75);
     });
   });
 
@@ -149,27 +153,27 @@ describe("index.js", function () {
     it("should return sum of basicSalesTax + importSalesTax", function () {
       assert.equal(
         calculateSalesTaxTotal({
-          price: 10,
+          price: 14.99,
           isExempt: false,
           isImported: false,
         }),
-        1
+        1.5
       );
       assert.equal(
         calculateSalesTaxTotal({
-          price: 50,
+          price: 10,
           isExempt: true,
           isImported: true,
         }),
-        2.5
+        0.5
       );
       assert.equal(
         calculateSalesTaxTotal({
-          price: 20,
+          price: 47.5,
           isExempt: false,
           isImported: true,
         }),
-        3
+        7.15
       );
     });
 
@@ -236,7 +240,7 @@ describe("index.js", function () {
     });
   });
 
-  describe.only("printOutputString()", function () {
+  describe("printOutputString()", function () {
     it("should make a template string with qty, name + fullPrice: for champagne", function () {
       assert.equal(
         printOutputString({ qty: 1, name: "bottle of Champagne" }, 43.99),
@@ -244,18 +248,18 @@ describe("index.js", function () {
       );
     });
 
-    // it("should make a template string with qty, name + fullPrice", function () {
-    //   assert.equal(
-    //     prepareOutputString(1, "imported box of chocolates", 10.2),
-    //     "1 imported box of chocolates: 10.20"
-    //   );
-    // });
+    xit("should make a template string with qty, name + fullPrice", function () {
+      assert.equal(
+        printOutputString(1, "imported box of chocolates", 10.2),
+        "1 imported box of chocolates: 10.20"
+      );
+    });
 
-    // it("should not round first 2 digits after decimal point", function () {
-    //   assert.equal(
-    //     prepareOutputString(1, "imported box of chocolates", 10.23),
-    //     "1 imported box of chocolates: 10.23"
-    //   );
-    // });
+    xit("should not round first 2 digits after decimal point", function () {
+      assert.equal(
+        printOutputString(1, "imported box of chocolates", 10.23),
+        "1 imported box of chocolates: 10.23"
+      );
+    });
   });
 });
