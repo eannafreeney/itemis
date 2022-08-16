@@ -1,5 +1,4 @@
 // parsing input
-
 export const getQuantity = (arr) => {
   const qty = Number(arr[0]);
   return Number.isNaN(qty) ? 0 : qty;
@@ -14,8 +13,7 @@ export const getIsImported = (arr) => {
   return arr.includes("imported");
 };
 
-export const getIsExempt = (arr) => {
-  const exemptProducts = ["chocolate", "pills", "book"];
+export const getIsExempt = (arr, exemptProducts) => {
   return exemptProducts.some((el) => arr.join(" ").includes(el));
 };
 
@@ -23,13 +21,13 @@ export const getProductName = (arr) => {
   return arr.slice(1, -2).join(" ");
 };
 
-export const parseInput = (input) => {
+export const parseInput = (input, exemptProducts) => {
   const product = {};
   const splitInput = input.split(" ");
   product.qty = getQuantity(splitInput);
   product.price = getPrice(splitInput);
   product.isImported = getIsImported(splitInput);
-  product.isExempt = getIsExempt(splitInput);
+  product.isExempt = getIsExempt(splitInput, exemptProducts);
   product.name = getProductName(splitInput);
   return product;
 };
@@ -58,19 +56,21 @@ export const roundSalesTax = (totalSalesTax) => {
 export const calculateSalesTaxTotal = (product) => {
   const totalSalesTax =
     calculateBasicSalesTax(product) + calculateImportSalesTax(product);
-  const totalRoundedSalesTax = roundSalesTax(totalSalesTax);
-  return totalRoundedSalesTax;
+  return roundSalesTax(totalSalesTax);
 };
 
 export const calculateFullProductPrice = (product, roundedTotalSalesTax) => {
   return (product.price + roundedTotalSalesTax) * product.qty;
 };
 
-export const printOutputString = (product, fullProductPrice) => {
+export const printReceiptItem = (product, fullProductPrice) => {
   return `${product.qty} ${product.name}: ${fullProductPrice.toFixed(2)}`;
 };
 
-export const printTotals = (totalSalesTax, billTotal) => {
-  console.log(`Sales Taxes: ${totalSalesTax.toFixed(2)}`);
-  console.log(`Total: ${billTotal.toFixed(2)}`);
+export const printSalesTaxTotal = (totalSalesTax) => {
+  return `Sales Taxes: ${totalSalesTax.toFixed(2)}`;
+};
+
+export const printReceiptTotal = (billTotal) => {
+  return `Total: ${billTotal.toFixed(2)}`;
 };

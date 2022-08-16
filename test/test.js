@@ -12,8 +12,9 @@ import {
   roundSalesTax,
   calculateSalesTaxTotal,
   calculateFullProductPrice,
-  printOutputString,
-  printTotals,
+  printReceiptItem,
+  printSalesTaxTotal,
+  printReceiptTotal,
 } from "../utils.js";
 
 describe("index.js", function () {
@@ -57,11 +58,17 @@ describe("index.js", function () {
 
   describe("getIsExempt()", function () {
     it("should return true if a term in exemptProducts matches the string", function () {
-      assert.equal(getIsExempt(["box", "of", "chocolates"]), true);
+      assert.equal(
+        getIsExempt(["box", "of", "chocolates"], ["chocolate", "pill", "book"]),
+        true
+      );
     });
 
     it("should return false if no term in exemptProducts matches the string", function () {
-      assert.equal(getIsExempt(["box", "of", "apples"]), false);
+      assert.equal(
+        getIsExempt(["box", "of", "apples"], ["chocolate", "pill", "book"]),
+        false
+      );
     });
   });
 
@@ -72,21 +79,24 @@ describe("index.js", function () {
         "box of chocolates"
       );
     });
-
-    // it("should return false if no term in exemptProducts matches the string", function () {
-    //   assert.equal(getProductName(["box", "of", "apples"]), false);
-    // });
   });
 
   describe("parseInput()", function () {
-    it("should remove first and last 2 elements from the array and then return them as a string", function () {
-      assert.deepEqual(parseInput("1 book of fairytales at 12.49"), {
-        qty: 1,
-        price: 12.49,
-        isImported: false,
-        isExempt: true,
-        name: "book of fairytales",
-      });
+    it("should return an obj with the values for the product", function () {
+      assert.deepEqual(
+        parseInput("1 book of fairytales at 12.49", [
+          "chocolate",
+          "pill",
+          "book",
+        ]),
+        {
+          qty: 1,
+          price: 12.49,
+          isImported: false,
+          isExempt: true,
+          name: "book of fairytales",
+        }
+      );
     });
   });
 
@@ -150,7 +160,7 @@ describe("index.js", function () {
   });
 
   describe("calculateSalesTaxTotal()", function () {
-    it("should return sum of basicSalesTax + importSalesTax", function () {
+    it("should return 1.50 when price is 14.99, not exempt, not imported", function () {
       assert.equal(
         calculateSalesTaxTotal({
           price: 14.99,
@@ -159,6 +169,9 @@ describe("index.js", function () {
         }),
         1.5
       );
+    });
+
+    it("should return 0.50 when price is 10, is exempt, is imported", function () {
       assert.equal(
         calculateSalesTaxTotal({
           price: 10,
@@ -167,6 +180,9 @@ describe("index.js", function () {
         }),
         0.5
       );
+    });
+
+    it("should return 1.50 when price is 7.15, noy exempt, is imported", function () {
       assert.equal(
         calculateSalesTaxTotal({
           price: 47.5,
@@ -240,26 +256,31 @@ describe("index.js", function () {
     });
   });
 
-  describe("printOutputString()", function () {
+  describe("printReceiptItem()", function () {
     it("should make a template string with qty, name + fullPrice: for champagne", function () {
       assert.equal(
-        printOutputString({ qty: 1, name: "bottle of Champagne" }, 43.99),
+        printReceiptItem({ qty: 1, name: "bottle of Champagne" }, 43.99),
         "1 bottle of Champagne: 43.99"
       );
     });
 
-    xit("should make a template string with qty, name + fullPrice", function () {
+    it("should make a template string with qty, name + fullPrice", function () {
       assert.equal(
-        printOutputString(1, "imported box of chocolates", 10.2),
+        printReceiptItem({ qty: 1, name: "imported box of chocolates" }, 10.2),
         "1 imported box of chocolates: 10.20"
       );
     });
+  });
 
-    xit("should not round first 2 digits after decimal point", function () {
-      assert.equal(
-        printOutputString(1, "imported box of chocolates", 10.23),
-        "1 imported box of chocolates: 10.23"
-      );
+  describe("printSalesTaxTotal()", function () {
+    it("should make a template string with sales tax total", function () {
+      assert.equal(printSalesTaxTotal(43.99), "Sales Taxes: 43.99");
+    });
+  });
+
+  describe("printReceiptTotal()", function () {
+    it("should make a template string with receipt total", function () {
+      assert.equal(printReceiptTotal(95.0), "Total: 95.00");
     });
   });
 });

@@ -2,11 +2,14 @@ import {
   parseInput,
   calculateSalesTaxTotal,
   calculateFullProductPrice,
-  printOutputString,
-  printTotals,
+  printReceiptItem,
+  printSalesTaxTotal,
+  printReceiptTotal,
 } from "./utils.js";
 
-const input1 = [
+const EXEMPT_PRODUCTS = ["chocolate", "pill", "book"];
+
+const input = [
   "1 book at 12.49",
   "1 music CD at 14.99",
   "1 chocolate bar at 0.85",
@@ -23,29 +26,28 @@ const input3 = [
 ];
 
 function printReceipt(input) {
-  const products = input.map(parseInput);
+  const products = input.map((item) => parseInput(item, EXEMPT_PRODUCTS));
 
-  // declare variables for printing later
   let totalSalesTax = 0;
   let billTotal = 0;
 
-  // loop through the products array
   products.forEach((product) => {
     const roundedTotalSalesTax = calculateSalesTaxTotal(product);
     const fullProductPrice = calculateFullProductPrice(
       product,
       roundedTotalSalesTax
     );
-    console.log(printOutputString(product, fullProductPrice));
+    console.log(printReceiptItem(product, fullProductPrice));
     totalSalesTax += roundedTotalSalesTax;
     billTotal += fullProductPrice;
   });
 
-  // prints
-  printTotals(totalSalesTax, billTotal);
+  // printing totals
+  console.log(printSalesTaxTotal(totalSalesTax));
+  console.log(printReceiptTotal(billTotal));
   console.log("\n");
 }
 
-printReceipt(input1);
+printReceipt(input);
 printReceipt(input2);
 printReceipt(input3);
